@@ -5,16 +5,21 @@ on:
     - cron: '5 0 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit
         run: |
           git config user.email "wahaj9167@gmail.com"
           git config user.name "syedwahajali2"
           echo "$(date)" >> log.txt
           git add .
-          git commit -m "log: $(date)"
+          git commit -m "log: $(date)" || exit 0
           git push
